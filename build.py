@@ -13,3 +13,4 @@ default_task = "publish"
 def initialize(project):
     project.depends_on_requirements('requirements.txt')
     project.build_depends_on('mockito')
+    project.depends_on('python-coveralls')

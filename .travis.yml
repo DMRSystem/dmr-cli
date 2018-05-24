@@ -5,3 +5,4 @@ install:
  - pyb install_dependencies
 script:
   - pyb verify
+after_success: coveralls
