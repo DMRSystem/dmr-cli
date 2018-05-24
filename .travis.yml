@@ -5,4 +5,4 @@ install:
  - pyb install_dependencies
 script:
   - pyb verify
-after_success: coveralls
+after_success: cat target/reports/coverage | coveralls
