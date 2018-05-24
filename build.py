@@ -11,4 +11,5 @@ default_task = "publish"
 
 @init
 def initialize(project):
+    project.depends_on_requirements('requirements.txt')
     project.build_depends_on('mockito')
