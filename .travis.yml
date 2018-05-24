@@ -4,4 +4,4 @@ install:
  - pip install pybuilder
  - pyb install_dependencies
 script:
-  - pyb run_unit_tests
+  - pyb verify
