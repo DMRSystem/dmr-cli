@@ -5,4 +5,7 @@ install:
  - pyb install_dependencies
 script:
   - pyb verify
-after_success: coveralls --verbose
+after_success:
+  - pwd
+  - ls
+  - coveralls
