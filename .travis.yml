@@ -7,5 +7,5 @@ script:
   - pyb verify
 after_success:
   - pwd
-  - ls
+  - ls -la
   - coveralls
