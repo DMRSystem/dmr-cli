@@ -6,6 +6,4 @@ install:
 script:
   - pyb verify
 after_success:
-  - pwd
-  - ls -la
   - coveralls

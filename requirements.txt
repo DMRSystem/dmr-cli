@@ -1,1 +1,2 @@
 click == 6.7
+dependency_injector == 3.12.0
