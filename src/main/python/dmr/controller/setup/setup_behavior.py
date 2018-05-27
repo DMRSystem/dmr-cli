@@ -3,9 +3,9 @@ from typing import List
 from .setup_step import ISetupStep
 
 
-class AbstractSetupBehavior(object):
+class SetupBehavior(object):
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.setup_steps: List[ISetupStep] = []
 
     def add_setup_step(self, setup_step: ISetupStep) -> None:
@@ -15,5 +15,5 @@ class AbstractSetupBehavior(object):
         for step in self.setup_steps:
             step.execute()
 
-    def get_key(self) -> str:
+    def get_system_name(self) -> str:
         raise NotImplementedError()

@@ -1,6 +1,6 @@
 
 import requests
-from logging import Logger
+from dmr.utils.logging.logging_adapter import ILoggingAdapter
 from dmr.controller.setup.setup_step import ISetupStep
 
 
@@ -10,7 +10,7 @@ class MixxxDownloader(ISetupStep):
         self.download_url: str = kwargs['download_url']
         self.download_directory: str = kwargs['download_directory']
         self.requests: requests = kwargs['requests']
-        self.logger: Logger = kwargs['logger']
+        self.logger: ILoggingAdapter = kwargs['logging_adapter']
 
     def execute(self):
         self.logger.info('Downloading Mixxx...')

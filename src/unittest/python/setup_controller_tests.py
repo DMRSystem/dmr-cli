@@ -2,7 +2,7 @@
 import unittest
 
 from dmr.controller.setup.setup_controller import SetupController
-from dmr.controller.setup.setup_behavior import AbstractSetupBehavior
+from dmr.controller.setup.setup_behavior import SetupBehavior
 from dmr.controller.setup.platform_adapter import PlatformAdapter
 
 from mockito import mock, verify, when
@@ -15,9 +15,9 @@ class SetupControllerTest(unittest.TestCase):
         self.setup_controller: SetupController = SetupController(platform_adapter=self.mock_platform_adapter)
 
     def test_setup_controller_calls_setup_behavior(self):
-        mock_setup_behavior: AbstractSetupBehavior = mock()
+        mock_setup_behavior: SetupBehavior = mock()
 
-        when(mock_setup_behavior).get_key().thenReturn('mock_system')
+        when(mock_setup_behavior).get_system_name().thenReturn('mock_system')
         when(self.mock_platform_adapter).get_system().thenReturn('mock_system')
 
         self.setup_controller.add_setup_behavior(mock_setup_behavior)
