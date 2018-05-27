@@ -12,4 +12,5 @@ class SetupController(object):
         self.setup_steps.append(setup_step)
 
     def do_setup(self) -> None:
-        pass
+        for step in self.setup_steps:  # type: ISetupStep
+            step.execute()
