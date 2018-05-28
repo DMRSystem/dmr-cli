@@ -17,7 +17,3 @@ class MixxxDownloaderTest(unittest.TestCase):
                                                            download_directory=self.download_directory,
                                                            requests=self.requests)
 
-    def test_downloader_calls_logger(self):
-        self.downloader.execute()
-
-        verify(self.logger).info('Downloading Mixxx...')

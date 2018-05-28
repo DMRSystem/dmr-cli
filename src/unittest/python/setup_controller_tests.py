@@ -4,6 +4,7 @@ import unittest
 from dmr.controller.setup.setup_controller import SetupController
 from dmr.controller.setup.setup_behavior import SetupBehavior
 from dmr.controller.setup.platform_adapter import PlatformAdapter
+from dmr.controller.setup import SetupControllerModule
 
 from mockito import mock, verify, when
 

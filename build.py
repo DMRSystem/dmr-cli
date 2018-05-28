@@ -22,3 +22,4 @@ def initialize(project):
     project.build_depends_on('mockito')
     project.build_depends_on('coveralls')
     project.set_property('distutils_console_scripts', ['dmr=dmr.cli.main:main'])
+    project.set_property('coverage_break_build', False)
