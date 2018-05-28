@@ -6,5 +6,5 @@ import click
 
 class ClickLoggingAdapter(ILoggingAdapter):
 
-    def info(self, message):
-        click.echo(message)
+    def info(self, message, color=None):
+        click.echo(click.style(message, fg=color))

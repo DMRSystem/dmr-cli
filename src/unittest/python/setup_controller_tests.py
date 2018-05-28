@@ -4,7 +4,7 @@ import unittest
 from dmr.controller.setup.setup_controller import SetupController
 from dmr.controller.setup.setup_behavior import SetupBehavior
 from dmr.controller.setup.platform_adapter import PlatformAdapter
-from dmr.controller.setup import SetupControllerModule
+from dmr.utils.logging.logging_adapter import ILoggingAdapter
 
 from mockito import mock, verify, when
 
@@ -13,7 +13,9 @@ class SetupControllerTest(unittest.TestCase):
 
     def setUp(self):
         self.mock_platform_adapter: PlatformAdapter = mock()
-        self.setup_controller: SetupController = SetupController(platform_adapter=self.mock_platform_adapter)
+        self.mock_logging_adapter: ILoggingAdapter = mock()
+        self.setup_controller: SetupController = SetupController(platform_adapter=self.mock_platform_adapter,
+                                                                 logging_adapter=self.mock_logging_adapter)
 
     def test_setup_controller_calls_setup_behavior(self):
         mock_setup_behavior: SetupBehavior = mock()
