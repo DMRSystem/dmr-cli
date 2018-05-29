@@ -6,9 +6,12 @@ from dmr.controller.setup.platform_adapter import PlatformAdapter
 from dmr.controller.setup.setup_behavior import SetupBehavior
 from dmr.controller.setup.behavior.osx.step.mixxx_downloader import MixxxDownloader, AlreadyDownloadedCheckDecorator
 from dmr.controller.setup.behavior.osx.step.mixxx_download_mounter import MixxxDownloadMounter
+from dmr.controller.setup.behavior.osx.step.mixxx_installer import MixxxInstaller, AlreadyInstalledCheckDecorator
+from dmr.controller.setup.behavior.osx.step.mixxx_download_detacher import MixxxDownloadDetacher
 from dmr.controller.setup.behavior.osx.step.mixxx_download_remover import MixxxDownloadRemover
 from dmr.utils.logging.adapter.click_logging_adapter import ClickLoggingAdapter
 from dmr.utils.requests.requests_adapter import RequestsAdapter
+from dmr.utils.process.process_adapter import ProcessAdapter
 from pathlib import Path
 
 
@@ -23,6 +26,7 @@ class SetupControllerProvider(providers.Provider):
         full_download_path = Path(download_file_path, download_file_name)
         logging_adapter = ClickLoggingAdapter()
         requests_adapter = RequestsAdapter(progress_bar_color)
+        process_adapter = ProcessAdapter(logging_adapter=logging_adapter)
 
         mixxx_downloader = MixxxDownloader(download_url=download_url,
                                            logging_adapter=logging_adapter,
@@ -34,7 +38,18 @@ class SetupControllerProvider(providers.Provider):
                                                            full_download_path,
                                                            logging_adapter)
 
-        mixxx_download_mounter = MixxxDownloadMounter(logging_adapter=logging_adapter)
+        mixxx_download_mounter = MixxxDownloadMounter(logging_adapter=logging_adapter,
+                                                      process_adapter=process_adapter,
+                                                      full_download_path=full_download_path)
+
+        mixxx_installer = MixxxInstaller(logging_adapter=logging_adapter,
+                                         process_adapter=process_adapter)
+
+        mixxx_installer = AlreadyInstalledCheckDecorator(mixxx_installer,
+                                                         logging_adapter=logging_adapter)
+
+        mixxx_download_detacher = MixxxDownloadDetacher(logging_adapter=logging_adapter,
+                                                        process_adapter=process_adapter)
 
         mixxx_download_remover = MixxxDownloadRemover(full_download_path,
                                                       logging_adapter)
@@ -42,6 +57,8 @@ class SetupControllerProvider(providers.Provider):
         osx_setup_behavior = SetupBehavior('Darwin')
         osx_setup_behavior.add_setup_step(mixxx_downloader)
         osx_setup_behavior.add_setup_step(mixxx_download_mounter)
+        osx_setup_behavior.add_setup_step(mixxx_installer)
+        osx_setup_behavior.add_setup_step(mixxx_download_detacher)
         # osx_setup_behavior.add_setup_step(mixxx_download_remover)
 
         platform_adapter = PlatformAdapter()

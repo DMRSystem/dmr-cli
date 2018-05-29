@@ -20,7 +20,7 @@ class MixxxDownloader(ISetupStep):
         self._ensure_download_directory_exists()
         full_download_path: Path = Path(self.download_file_path, self.download_file_name)
         self.requests_adapter.download_file_to_directory(self.download_url, full_download_path)
-        self.logger.info('Mixxx downloaded to {0}'.format(full_download_path))
+        self.logger.info('Mixxx downloaded to {0}'.format(full_download_path), indentation=1)
 
     def _ensure_download_directory_exists(self):
         self.download_file_path.mkdir(parents=True, exist_ok=True)
@@ -36,7 +36,7 @@ class AlreadyDownloadedCheckDecorator(AbstractSetupStepDecorator):
     def execute(self):
         if self.full_download_path.exists():
             self.logger.info('Mixxx image already downloaded at {0}'.format(self.full_download_path), 'blue')
-            self.logger.info('Skipping download.')
+            self.logger.info('Skipping download.', indentation=1)
             return
         AbstractSetupStepDecorator.execute(self)
 
