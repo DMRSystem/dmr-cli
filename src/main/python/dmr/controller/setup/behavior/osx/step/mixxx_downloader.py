@@ -1,7 +1,7 @@
 
 from dmr.utils.requests.requests_adapter import RequestsAdapter
 from dmr.utils.logging.logging_adapter import ILoggingAdapter
-from dmr.controller.setup.setup_step import ISetupStep
+from dmr.controller.setup.setup_step import ISetupStep, AbstractSetupStepDecorator
 
 from pathlib import Path
 
@@ -24,3 +24,19 @@ class MixxxDownloader(ISetupStep):
 
     def _ensure_download_directory_exists(self):
         self.download_file_path.mkdir(parents=True, exist_ok=True)
+
+
+class AlreadyDownloadedCheckDecorator(AbstractSetupStepDecorator):
+
+    def __init__(self, setup_step: ISetupStep, full_download_path: Path, logging_adapter: ILoggingAdapter):
+        AbstractSetupStepDecorator.__init__(self, setup_step)
+        self.full_download_path = full_download_path
+        self.logger: ILoggingAdapter = logging_adapter
+
+    def execute(self):
+        if self.full_download_path.exists():
+            self.logger.info('Mixxx image already downloaded at {0}'.format(self.full_download_path), 'blue')
+            self.logger.info('Skipping download.')
+            return
+        AbstractSetupStepDecorator.execute(self)
+
