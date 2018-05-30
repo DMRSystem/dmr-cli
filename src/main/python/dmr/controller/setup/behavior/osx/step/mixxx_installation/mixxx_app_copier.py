@@ -7,16 +7,14 @@ from dmr.utils.process.process_adapter import ProcessAdapter
 from pathlib import Path
 
 
-class MixxxInstaller(ISetupStep):
+class MixxxAppCopier(ISetupStep):
 
     def __init__(self, logging_adapter: ILoggingAdapter, process_adapter: ProcessAdapter):
         self.logger: ILoggingAdapter = logging_adapter
         self.process_adapter: ProcessAdapter = process_adapter
 
-    def execute(self) -> None:
-        self.logger.info('Installing Mixxx...', 'yellow')
-        self.logger.info('Copying Mixxx.app to /Applications...', indentation=1)
-        self.process_adapter.run('cp', '-a', '/Volumes/Mixxx/Mixxx.app', '/Applications')
-        self.logger.info('Mixxx.app copied.', indentation=1)
-        self.logger.info('Mixxx installed.', indentation=1)
+    def execute(self, depth: int = 0) -> None:
+        self.logger.info('Copying Mixxx.app to /Applications...', 'yellow', indentation=depth)
+        self.process_adapter.run(depth, 'cp', '-a', '/Volumes/Mixxx/Mixxx.app', '/Applications')
+        self.logger.info('Mixxx.app copied.', indentation=depth)
 

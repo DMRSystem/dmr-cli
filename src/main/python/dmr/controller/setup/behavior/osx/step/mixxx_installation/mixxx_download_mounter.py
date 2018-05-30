@@ -14,7 +14,7 @@ class MixxxDownloadMounter(ISetupStep):
         self.process_adapter: ProcessAdapter = process_adapter
         self.full_download_path: Path = full_download_path
 
-    def execute(self) -> None:
-        self.logger.info('Mounting Mixxx image...', 'yellow')
-        self.process_adapter.run('hdiutil', 'attach', '-mountpoint', '/Volumes/Mixxx', str(self.full_download_path))
-        self.logger.info('Mixxx image mounted.', indentation=1)
+    def execute(self, depth: int = 0) -> None:
+        self.logger.info('Mounting Mixxx image...', 'yellow', indentation=depth)
+        self.process_adapter.run(depth, 'hdiutil', 'attach', '-mountpoint', '/Volumes/Mixxx', str(self.full_download_path))
+        self.logger.info('Mixxx image mounted.', indentation=depth)

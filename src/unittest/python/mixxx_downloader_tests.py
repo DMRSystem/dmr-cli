@@ -1,5 +1,5 @@
 
-from dmr.controller.setup.behavior.osx.step.mixxx_downloader import MixxxDownloader
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_downloader import MixxxDownloader
 from dmr.utils.logging.logging_adapter import ILoggingAdapter
 from dmr.utils.requests.requests_adapter import RequestsAdapter
 from pathlib import Path

@@ -4,11 +4,13 @@ import dependency_injector.providers as providers
 from dmr.controller.setup.setup_controller import SetupController
 from dmr.controller.setup.platform_adapter import PlatformAdapter
 from dmr.controller.setup.setup_behavior import SetupBehavior
-from dmr.controller.setup.behavior.osx.step.mixxx_downloader import MixxxDownloader, AlreadyDownloadedCheckDecorator
-from dmr.controller.setup.behavior.osx.step.mixxx_download_mounter import MixxxDownloadMounter
-from dmr.controller.setup.behavior.osx.step.mixxx_installer import MixxxInstaller, AlreadyInstalledCheckDecorator
-from dmr.controller.setup.behavior.osx.step.mixxx_download_detacher import MixxxDownloadDetacher
-from dmr.controller.setup.behavior.osx.step.mixxx_download_remover import MixxxDownloadRemover
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_downloader import MixxxDownloader
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_download_mounter import MixxxDownloadMounter
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_app_copier import MixxxAppCopier
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_download_detacher import MixxxDownloadDetacher
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_download_remover import MixxxDownloadRemover
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_installer import MixxxInstaller
+from dmr.controller.setup.behavior.osx.step.mixxx_installation.mixxx_installer import AlreadyInstalledCheckDecorator
 from dmr.utils.logging.adapter.click_logging_adapter import ClickLoggingAdapter
 from dmr.utils.requests.requests_adapter import RequestsAdapter
 from dmr.utils.process.process_adapter import ProcessAdapter
@@ -34,19 +36,12 @@ class SetupControllerProvider(providers.Provider):
                                            download_file_name=download_file_name,
                                            requests_adapter=requests_adapter)
 
-        mixxx_downloader = AlreadyDownloadedCheckDecorator(mixxx_downloader,
-                                                           full_download_path,
-                                                           logging_adapter)
-
         mixxx_download_mounter = MixxxDownloadMounter(logging_adapter=logging_adapter,
                                                       process_adapter=process_adapter,
                                                       full_download_path=full_download_path)
 
-        mixxx_installer = MixxxInstaller(logging_adapter=logging_adapter,
-                                         process_adapter=process_adapter)
-
-        mixxx_installer = AlreadyInstalledCheckDecorator(mixxx_installer,
-                                                         logging_adapter=logging_adapter)
+        mixxx_app_copier = MixxxAppCopier(logging_adapter=logging_adapter,
+                                          process_adapter=process_adapter)
 
         mixxx_download_detacher = MixxxDownloadDetacher(logging_adapter=logging_adapter,
                                                         process_adapter=process_adapter)
@@ -54,12 +49,19 @@ class SetupControllerProvider(providers.Provider):
         mixxx_download_remover = MixxxDownloadRemover(full_download_path,
                                                       logging_adapter)
 
+        mixxx_installer = MixxxInstaller(logging_adapter=logging_adapter)
+        mixxx_installer.add_setup_step(mixxx_downloader)
+        mixxx_installer.add_setup_step(mixxx_download_mounter)
+        mixxx_installer.add_setup_step(mixxx_app_copier)
+        mixxx_installer.add_setup_step(mixxx_download_detacher)
+        mixxx_installer.add_setup_step(mixxx_download_remover)
+
+        mixxx_installer = AlreadyInstalledCheckDecorator(mixxx_installer,
+                                                         logging_adapter=logging_adapter)
+
         osx_setup_behavior = SetupBehavior('Darwin')
-        osx_setup_behavior.add_setup_step(mixxx_downloader)
-        osx_setup_behavior.add_setup_step(mixxx_download_mounter)
         osx_setup_behavior.add_setup_step(mixxx_installer)
-        osx_setup_behavior.add_setup_step(mixxx_download_detacher)
-        # osx_setup_behavior.add_setup_step(mixxx_download_remover)
+
 
         platform_adapter = PlatformAdapter()
         setup_controller = SetupController(platform_adapter=platform_adapter,

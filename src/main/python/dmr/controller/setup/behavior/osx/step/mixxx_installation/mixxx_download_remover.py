@@ -10,7 +10,7 @@ class MixxxDownloadRemover(ISetupStep):
         self.full_download_path = full_download_path
         self.logger = logging_adapter
 
-    def execute(self) -> None:
-        self.logger.info('Removing mixxx image at {0}'.format(self.full_download_path), 'yellow')
+    def execute(self, depth: int = 0) -> None:
+        self.logger.info('Removing mixxx image at {0}'.format(self.full_download_path), 'yellow', indentation=depth)
         self.full_download_path.unlink()
-        self.logger.info('Mixxx image removed.')
+        self.logger.info('Mixxx image removed.', indentation=depth)

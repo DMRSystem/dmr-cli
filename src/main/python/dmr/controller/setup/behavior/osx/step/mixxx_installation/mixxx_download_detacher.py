@@ -10,7 +10,7 @@ class MixxxDownloadDetacher(ISetupStep):
         self.logger: ILoggingAdapter = logging_adapter
         self.process_adapter: ProcessAdapter = process_adapter
 
-    def execute(self) -> None:
-        self.logger.info('Detaching Mixxx image...', 'yellow')
-        self.process_adapter.run('hdiutil', 'detach', '/Volumes/Mixxx')
-        self.logger.info('Mixxx image detached.', indentation=1)
+    def execute(self, depth: int = 0) -> None:
+        self.logger.info('Detaching Mixxx image...', 'yellow', indentation=depth)
+        self.process_adapter.run(depth, 'hdiutil', 'detach', '/Volumes/Mixxx')
+        self.logger.info('Mixxx image detached.', indentation=depth)
